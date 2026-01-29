@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ResturantReserve.Views.GamePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:ResturantReserve.ViewModels"
+    Title="GamePage"
+    x:DataType="vm:GamePageVM">
+    <VerticalStackLayout BackgroundColor="#c773eb">
+        <Label HorizontalOptions="Center" Text="{Binding OpponentName}"  FontFamily="BevasNeue" TextColor="#fcd703" FontSize="20"/>
+        <Label
+               Margin="50"
+               FontSize="Title"
+               HorizontalOptions="Center"
+               Text="{Binding TimeLeft}" />
+        <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,Auto,Auto,Auto,Auto" HorizontalOptions="Center" ColumnSpacing="5" RowSpacing="20">
+            <ImageButton Grid.Row="0" Grid.Column="0"
+                         Source="startingcard.png"
+                         WidthRequest="80"
+                         HeightRequest="120"
+                         CornerRadius="10"/>
+            <ImageButton Grid.Row="0" Grid.Column="1"
+                         Source="startingcard.png"
+                         WidthRequest="80"
+                         HeightRequest="120"
+                         CornerRadius="10"/>
+            <ImageButton Grid.Row="0" Grid.Column="2"
+                         Source="startingcard.png"
+                         WidthRequest="80"
+                         HeightRequest="120"
+                         CornerRadius="10"/>
+            <ImageButton Grid.Row="0" Grid.Column="3"
+                         Source="startingcard.png"
+                         WidthRequest="80"
+                         HeightRequest="120"
+                         CornerRadius="10"/>
+
+            <Label Text="{Binding PackageCardCount}" 
+                   FontSize="14" 
+                   HorizontalOptions="Center"
+                   TextColor="White"/>
+            <ImageButton Grid.Row="1" Grid.Column="2"
+                         Source="{Binding OpenedCardImageSource}"
+                         WidthRequest="80"
+                         HeightRequest="120"
+                         CornerRadius="10"
+                         Command="{Binding TakeCardCommand}"/>
+
+            <ImageButton Grid.Row="2" Grid.Column="0"
+                         Source="startingcard.png"
+                         WidthRequest="80"
+                         HeightRequest="120"
+                         CornerRadius="10"/>
+            <ImageButton Grid.Row="2" Grid.Column="1"
+                         Source="startingcard.png"
+                         WidthRequest="80"
+                         HeightRequest="120"
+                         CornerRadius="10"/>
+            <ImageButton Grid.Row="2" Grid.Column="2"
+                         Source="startingcard.png"
+                         WidthRequest="80"
+                         HeightRequest="120"
+                         CornerRadius="10"/>
+            <ImageButton Grid.Row="2" Grid.Column="3"
+                         Source="startingcard.png"
+                         WidthRequest="80"
+                         HeightRequest="120"
+                         CornerRadius="10"/>
+        </Grid>
+        <Label HorizontalOptions="Center" Text="{Binding MyName}" FontFamily="BevasNeue" TextColor="#fcd703" FontSize="20"/>
+    </VerticalStackLayout>
+</ContentPage>
