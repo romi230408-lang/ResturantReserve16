@@ -14,8 +14,9 @@ namespace ResturantReserve.ModelsLogic
 
         public Game() : base()
         {
-            PackageCardCount = 52;
-            package = new CardsSet(true);
+            var tempPackage = new CardsSet(true);   // רק בשביל ערבוב
+            PackageCards = tempPackage.GetAllCards();     // ← זה מה שנשמר ב-Firebase
+            PackageCardCount = PackageCards.Count;
             myCards = new CardsSet(full: false)
             {
                 SingleSelect = true
@@ -28,29 +29,44 @@ namespace ResturantReserve.ModelsLogic
         public void Restart()
         {
             pickedCardsCount = 0;
-            PackageIndex = 0;
-            package.Reset(true);
-            openedCard = package.TakeCard();
-            PackageCardCount = package.Count; 
-            myCards.Reset(false);  
+
+            // יוצרים קופה חדשה ומעורבבת
+            var tempPackage = new CardsSet(true);
+            PackageCards = tempPackage.GetAllCards();
+
+            // קלף פתוח ראשון
+            openedCard = PackageCards[0];
+            PackageCards.RemoveAt(0);
+
+            PackageCardCount = PackageCards.Count;
+
+            myCards.Reset(false);
 
             Move = [Keys.NoMove, Keys.NoMove];
+            IsHostTurn = true;
+
             UpdateFbMove();
         }
         public override void TakePackageCard()
         {
-            PackageIndex++;
-            Card? card = package.TakeCard(PackageIndex);   
-            if (card != null)
-            {
-                var addedCard = myCards.Add(card); 
-                pickedCardsCount++;
-                PackageCardCount = package.Count;
-                Move = [Keys.TakeFromPackage, addedCard.Index];
-                IsHostTurn = !IsHostTurn;
-                UpdateFbMove();
-            }
+            if (PackageCards == null || PackageCards.Count == 0)
+                return;
+
+            // לוקחים תמיד את הקלף הראשון מהקופה המשותפת
+            var card = PackageCards[0];
+            PackageCards.RemoveAt(0);
+
+            var addedCard = myCards.Add(card);
+
+            pickedCardsCount++;
+            PackageCardCount = PackageCards.Count;
+
+            Move = [Keys.TakeFromPackage, addedCard.Index];
+            IsHostTurn = !IsHostTurn;
+
+            UpdateFbMove();
         }
+
 
 
         public Card? TakeCard()
@@ -60,18 +76,22 @@ namespace ResturantReserve.ModelsLogic
             myCards.TakeCard();
 
             // 2) We add the opened card to player cards.
-            myCards.Add(openedCard);
+            if (openedCard != null)
+                myCards.Add(openedCard);
 
-            var card = package.TakeCard();
-            if (card != null)
-            {
-                openedCard = card;
-                pickedCardsCount++;
-                PackageCardCount = package.Count; 
-                IsHostTurn = !IsHostTurn;
-                Move = [Keys.TakeFromPackage, 0];  
-                UpdateFbMove(); 
-            }
+            if (PackageCards == null || PackageCards.Count == 0)
+                return null;
+
+            openedCard = PackageCards[0];
+            PackageCards.RemoveAt(0);
+
+            pickedCardsCount++;
+            PackageCardCount = PackageCards.Count;
+
+            Move = [Keys.TakeFromPackage, 0];
+            IsHostTurn = !IsHostTurn;
+
+            UpdateFbMove();
             return openedCard;
 
         }
@@ -143,10 +163,10 @@ namespace ResturantReserve.ModelsLogic
             {
                 { nameof(Move), Move },
                 { nameof(IsHostTurn), IsHostTurn },
-                { nameof(PackageCardCount), package.Count },
                 { nameof(PickedCardsCount), pickedCardsCount },
                 { nameof(OpenedCardSource), openedCard?.Source?.ToString() ?? "" },
-                { nameof(PackageIndex), PackageIndex }
+                { nameof(PackageCards), PackageCards },
+                { nameof(PackageCardCount), PackageCards.Count }
             };
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
         }
@@ -177,13 +197,13 @@ namespace ResturantReserve.ModelsLogic
             Game? updatedGame = snapshot?.ToObject<Game>();
             if (updatedGame != null)
             {
+                PackageCards = updatedGame.PackageCards;
+                PackageCardCount = PackageCards.Count;
                 IsFull = updatedGame.IsFull;
                 GuestName = updatedGame.GuestName;
                 Move = updatedGame.Move;
                 IsHostTurn = updatedGame.IsHostTurn;
-                PackageCardCount = updatedGame.PackageCardCount;
                 pickedCardsCount = updatedGame.pickedCardsCount;
-                PackageIndex = updatedGame.PackageIndex;
                 openedCard = updatedGame.openedCard;
                 UpdateStatus();
                 if (_status.CurrentStatus == GameStatus.Statuses.Play)

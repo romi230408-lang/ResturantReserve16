@@ -43,12 +43,10 @@ namespace ResturantReserve.Models
 
         protected int pickedCardsCount;
         protected Card? openedCard;
-        protected CardsSet package = new(full: true);
         public abstract void TakePackageCard();
 
         protected GameModel()
         {
-            openedCard = package.TakeCard();
             Created = DateTime.UtcNow;
         }
 
@@ -73,7 +71,8 @@ namespace ResturantReserve.Models
         public List<int> Move { get; set; } = [Keys.NoMove, Keys.NoMove];
         public int PackageCardCount { get; set; } = 52;  
         public string OpenedCardSource { get; set; } = "";
-        public int PackageIndex { get; set; } = 0;  
+        public List<Card> PackageCards { get; set; } = new List<Card>();
+
 
 
     }
