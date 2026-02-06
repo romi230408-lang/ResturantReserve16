@@ -1,40 +1,35 @@
-﻿using ResturantReserve.Models;
+﻿using Plugin.CloudFirestore.Attributes;
+using ResturantReserve.Models;
 
 namespace ResturantReserve.ModelsLogic
 {
     public class Card : CardModel
     {
         private const int OFFSET = 50;
-        public event EventHandler? OnClick;
 
+        [Ignored]
+        public Thickness Margin { get; set; } = new Thickness(0);
+
+        public Card() : base(CardType.Number, 0) { }
         public Card(CardType type, int value) : base(type, value)
         {
-            Clicked += OnCardClick;
         }
 
-        private void OnCardClick(object? sender, EventArgs e)
-        {
-            OnClick?.Invoke(this, EventArgs.Empty);
-        }
 
         public void ToggleSelected()
         {
             IsSelected = !IsSelected;
-            Thickness t = Margin;
-            t.Bottom = IsSelected ? OFFSET : 0;
-            Margin = t;
+            Margin = new Thickness(Margin.Left, Margin.Top, Margin.Right, IsSelected ? OFFSET : 0);
         }
 
         public static Card Copy(Card card)
         {
-            Card newCard = new(CardType.Number, 0);
-
-            newCard = new Card(card.Type, card.Value)
+            return new Card(card.Type, card.Value)
             {
-                Index = card.Index
+                Index = card.Index,
+                IsSelected = card.IsSelected,
+                Margin = card.Margin
             };
-
-            return newCard;
         }
     }
 }

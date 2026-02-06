@@ -19,9 +19,13 @@ namespace ResturantReserve.ViewModels
         public ICommand SelectCardCommand { get; }
         public ICommand TakeCardCommand { get; }
         public int PickedCardsCount => game.PickedCardsCount;
-        public ImageSource? OpenedCardImageSource => game.OpenedCardImageSource;
         public bool IsHostTurn => game.IsHostTurn;
         public int PackageCardCount => game.PackageCardCount;
+        public ObservableCollection<Card> MyCards { get; } = new();
+        public string OpenedCardImageSource => game.OpenedCardImageSource;
+
+
+
         public GamePageVM(Game game)
         {
             game.OnGameChanged += OnGameChanged;
@@ -46,7 +50,7 @@ namespace ResturantReserve.ViewModels
         {
             OnPropertyChanged(nameof(IsHostTurn));
             OnPropertyChanged(nameof(PickedCardsCount)); 
-            OnPropertyChanged(nameof(OpenedCardImageSource)); 
+            OnPropertyChanged(nameof(OpenedCardImageSource));
         }
         private void OnMessageReceived(long timeLeft)
         {
@@ -112,11 +116,18 @@ namespace ResturantReserve.ViewModels
             if (restart)
                 game.Restart();
 
+            MyCards.Clear();
+
             for (int i = 0; i < 4; i++)
-                TakePackageCard();
+            {
+                Card? card = game.TakeCard();
+                if (card != null)
+                    MyCards.Add(card);
+            }
 
             OnPropertyChanged(nameof(OpenedCardImageSource));
         }
+
 
         private async void OnWin(object? sender, EventArgs e)
         {
@@ -137,6 +148,7 @@ namespace ResturantReserve.ViewModels
             Card? card = game.TakeCard();
             if (card != null)
             {
+                MyCards.Add(card);
 
                 OnPropertyChanged(nameof(PickedCardsCount));
                 OnPropertyChanged(nameof(OpenedCardImageSource));
@@ -146,6 +158,7 @@ namespace ResturantReserve.ViewModels
                 Toast.Make("No more cards", ToastDuration.Long, 20).Show();
             }
         }
+
 
         private void ResetGame()
         {

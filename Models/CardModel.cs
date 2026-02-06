@@ -2,7 +2,7 @@
 
 namespace ResturantReserve.Models
 {
-    public class CardModel : ImageButton
+    public class CardModel 
     {
         public static readonly string[] CardsImages =
         {
@@ -22,27 +22,17 @@ namespace ResturantReserve.Models
         {
             Type = type;
             Value = value;
-            if (type == CardType.Number && value >= 0 && value <= 9)
-            {
-                Source = CardsImages[value + 1];
-            }
-            else if (type == CardType.Look)
-            {
-                Source = "peek.png";
-            }
-            else if (type == CardType.Swap)
-            {
-                Source = "swap.png";
-            }
-            else if (type == CardType.DrawTwo)
-            {
-                Source = "drawTwo.png";
-            }
-
-            Aspect = Aspect.AspectFit;
-            HorizontalOptions = new LayoutOptions(LayoutAlignment.Start, false);
-            WidthRequest = 100;
         }
+        public string ImageSource =>
+           Type switch
+           {
+               CardType.Number => $"{Value}.png",
+               CardType.Look => "peek.png",
+               CardType.Swap => "swap.png",
+               CardType.DrawTwo => "drawtwo.png",
+               _ => "startingcard.png"
+           };
+
     }
 }
 

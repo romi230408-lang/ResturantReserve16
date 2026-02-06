@@ -42,7 +42,7 @@ namespace ResturantReserve.Models
 
 
         protected int pickedCardsCount;
-        protected Card? openedCard;
+        public Card? openedCard;
         public abstract void TakePackageCard();
 
         protected GameModel()
@@ -57,10 +57,6 @@ namespace ResturantReserve.Models
         }
 
         [Ignored]
-        public ImageSource? OpenedCardImageSource
-        {
-            get { return openedCard?.Source; }
-        }
 
         public bool IsHostTurn { get; set; } = false;
         public abstract void Play(bool MyMove);
@@ -70,10 +66,12 @@ namespace ResturantReserve.Models
         public EventHandler<DisplayMoveArgs>? DisplayChanged;
         public List<int> Move { get; set; } = [Keys.NoMove, Keys.NoMove];
         public int PackageCardCount { get; set; } = 52;  
-        public string OpenedCardSource { get; set; } = "";
-        public List<Card> PackageCards { get; set; } = new List<Card>();
+        public List<Card> PackageCards { get; set; } = new();
 
-
-
+        [Ignored]
+        public string OpenedCardImageSource
+        {
+            get => openedCard?.ImageSource ?? "startingcard.png";
+        }
     }
 }

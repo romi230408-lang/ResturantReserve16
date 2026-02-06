@@ -164,7 +164,6 @@ namespace ResturantReserve.ModelsLogic
                 { nameof(Move), Move },
                 { nameof(IsHostTurn), IsHostTurn },
                 { nameof(PickedCardsCount), pickedCardsCount },
-                { nameof(OpenedCardSource), openedCard?.Source?.ToString() ?? "" },
                 { nameof(PackageCards), PackageCards },
                 { nameof(PackageCardCount), PackageCards.Count }
             };

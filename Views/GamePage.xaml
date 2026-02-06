@@ -4,69 +4,87 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:vm="clr-namespace:ResturantReserve.ViewModels"
+    xmlns:models="clr-namespace:ResturantReserve.ModelsLogic"
     Title="GamePage"
     x:DataType="vm:GamePageVM">
-    <VerticalStackLayout BackgroundColor="#c773eb">
-        <Label HorizontalOptions="Center" Text="{Binding OpponentName}"  FontFamily="BevasNeue" TextColor="#fcd703" FontSize="20"/>
+
+    <VerticalStackLayout BackgroundColor="#c773eb" Padding="10" Spacing="15">
+
+        <!-- שם היריב -->
         <Label
-               Margin="50"
-               FontSize="Title"
-               HorizontalOptions="Center"
-               Text="{Binding TimeLeft}" />
-        <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,Auto,Auto,Auto,Auto" HorizontalOptions="Center" ColumnSpacing="5" RowSpacing="20">
-            <ImageButton Grid.Row="0" Grid.Column="0"
-                         Source="startingcard.png"
-                         WidthRequest="80"
-                         HeightRequest="120"
-                         CornerRadius="10"/>
-            <ImageButton Grid.Row="0" Grid.Column="1"
-                         Source="startingcard.png"
-                         WidthRequest="80"
-                         HeightRequest="120"
-                         CornerRadius="10"/>
-            <ImageButton Grid.Row="0" Grid.Column="2"
-                         Source="startingcard.png"
-                         WidthRequest="80"
-                         HeightRequest="120"
-                         CornerRadius="10"/>
-            <ImageButton Grid.Row="0" Grid.Column="3"
-                         Source="startingcard.png"
-                         WidthRequest="80"
-                         HeightRequest="120"
-                         CornerRadius="10"/>
+            HorizontalOptions="Center"
+            Text="{Binding OpponentName}"
+            FontFamily="BevasNeue"
+            TextColor="#fcd703"
+            FontSize="20" />
 
-            <Label Text="{Binding PackageCardCount}" 
-                   FontSize="14" 
-                   HorizontalOptions="Center"
-                   TextColor="White"/>
-            <ImageButton Grid.Row="1" Grid.Column="2"
-                         Source="{Binding OpenedCardImageSource}"
-                         WidthRequest="80"
-                         HeightRequest="120"
-                         CornerRadius="10"
-                         Command="{Binding TakeCardCommand}"/>
+        <!-- טיימר -->
+        <Label
+            FontSize="Title"
+            HorizontalOptions="Center"
+            Text="{Binding TimeLeft}" />
 
-            <ImageButton Grid.Row="2" Grid.Column="0"
-                         Source="startingcard.png"
-                         WidthRequest="80"
-                         HeightRequest="120"
-                         CornerRadius="10"/>
-            <ImageButton Grid.Row="2" Grid.Column="1"
-                         Source="startingcard.png"
-                         WidthRequest="80"
-                         HeightRequest="120"
-                         CornerRadius="10"/>
-            <ImageButton Grid.Row="2" Grid.Column="2"
-                         Source="startingcard.png"
-                         WidthRequest="80"
-                         HeightRequest="120"
-                         CornerRadius="10"/>
-            <ImageButton Grid.Row="2" Grid.Column="3"
-                         Source="startingcard.png"
-                         WidthRequest="80"
-                         HeightRequest="120"
-                         CornerRadius="10"/>
+        <!-- הקופה + הקלף הפתוח -->
+        <Grid
+            ColumnDefinitions="Auto,Auto,Auto"
+            HorizontalOptions="Center"
+            ColumnSpacing="20">
+
+            <!-- הקופה -->
+            <VerticalStackLayout HorizontalOptions="Center">
+                <ImageButton
+                    Source="startingcard.png"
+                    WidthRequest="80"
+                    HeightRequest="120"
+                    CornerRadius="10"
+                    Command="{Binding TakeCardCommand}" />
+
+                <Label
+                    Text="{Binding PackageCardCount}"
+                    FontSize="14"
+                    HorizontalOptions="Center"
+                    TextColor="White" />
+            </VerticalStackLayout>
+
+            <!-- הקלף הפתוח -->
+            <ImageButton
+                Grid.Column="1"
+                Source="{Binding OpenedCardImageSource}"
+                WidthRequest="80"
+                HeightRequest="120"
+                CornerRadius="10" />
+
         </Grid>
-        <Label HorizontalOptions="Center" Text="{Binding MyName}" FontFamily="BevasNeue" TextColor="#fcd703" FontSize="20"/>
+
+        <!-- הקלפים של השחקן -->
+        <CollectionView
+            ItemsSource="{Binding MyCards}"
+            ItemsLayout="HorizontalList"
+            HorizontalOptions="Center"
+            Margin="0,20,0,0">
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Card">
+                    <ImageButton
+                        Source="{Binding ImageSource}"
+                        WidthRequest="80"
+                        HeightRequest="120"
+                        CornerRadius="10"
+                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GamePageVM}},
+                                          Path=SelectCardCommand}"
+                        CommandParameter="{Binding .}" />
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+        <!-- שם השחקן -->
+        <Label
+            HorizontalOptions="Center"
+            Text="{Binding MyName}"
+            FontFamily="BevasNeue"
+            TextColor="#fcd703"
+            FontSize="20" />
+
     </VerticalStackLayout>
 </ContentPage>
