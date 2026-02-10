@@ -24,11 +24,26 @@
             HorizontalOptions="Center"
             Text="{Binding TimeLeft}" />
 
+        <!-- קלפי היריב (סגורים) -->
+        <CollectionView
+            ItemsSource="{Binding OpponentCards}"
+            ItemsLayout="HorizontalList"
+            HorizontalOptions="Center">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Image
+                        Source="startingcard.png"
+                        WidthRequest="80"
+                        HeightRequest="120" />
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
         <!-- הקופה + הקלף הפתוח -->
         <Grid
-            ColumnDefinitions="Auto,Auto,Auto"
+            ColumnDefinitions="Auto,Auto"
             HorizontalOptions="Center"
-            ColumnSpacing="20">
+            ColumnSpacing="30">
 
             <!-- הקופה -->
             <VerticalStackLayout HorizontalOptions="Center">
@@ -37,7 +52,8 @@
                     WidthRequest="80"
                     HeightRequest="120"
                     CornerRadius="10"
-                    Command="{Binding TakeCardCommand}" />
+                    Command="{Binding TakeCardCommand}" 
+                    IsEnabled="{Binding Source={x:Reference GamePageRoot}, Path=BindingContext.IsHostTurn}" />
 
                 <Label
                     Text="{Binding PackageCardCount}"
@@ -56,27 +72,28 @@
 
         </Grid>
 
-        <!-- הקלפים של השחקן -->
+        <!-- הקלפים שלך (סגורים) -->
         <CollectionView
-            ItemsSource="{Binding MyCards}"
-            ItemsLayout="HorizontalList"
-            HorizontalOptions="Center"
-            Margin="0,20,0,0">
+                ItemsSource="{Binding MyCards}"
+                ItemsLayout="HorizontalList"
+                HorizontalOptions="Center"
+                Margin="0,20,0,0">
 
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:Card">
                     <ImageButton
-                        Source="{Binding ImageSource}"
+                        Source="startingcard.png"
                         WidthRequest="80"
                         HeightRequest="120"
                         CornerRadius="10"
-                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GamePageVM}},
-                                          Path=SelectCardCommand}"
+                        IsEnabled="{Binding Source={x:Reference GamePageRoot}, Path=BindingContext.IsHostTurn}"
+                        Command="{Binding Source={x:Reference GamePageRoot}, Path=BindingContext.SelectCardCommand}"
                         CommandParameter="{Binding .}" />
                 </DataTemplate>
             </CollectionView.ItemTemplate>
 
         </CollectionView>
+
 
         <!-- שם השחקן -->
         <Label

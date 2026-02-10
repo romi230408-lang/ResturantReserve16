@@ -94,10 +94,18 @@ namespace ResturantReserve.ModelsLogic
                 card?.ToggleSelected();
             }
         }
-        public List<Card> GetAllCards()
+        public List<CardData> GetAllCards()
         {
-            return new List<Card>(cards);
+            return cards
+                .Select(c => new CardData
+                {
+                    Type = c.Type,
+                    Value = c.Value,
+                    Index = c.Index
+                })
+                .ToList();
         }
+
 
     }
 }

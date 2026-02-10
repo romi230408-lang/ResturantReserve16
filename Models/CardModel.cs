@@ -32,6 +32,12 @@ namespace ResturantReserve.Models
                CardType.DrawTwo => "drawtwo.png",
                _ => "startingcard.png"
            };
+        public static string GetImageSource(CardType type, int value)
+        {
+            // התאימי את הפורמט לשמות הקבצים שלך
+            // לדוגמה: hearts_5.png, spades_12.png וכו'
+            return $"{type.ToString().ToLower()}_{value}.png";
+        }
 
     }
 }

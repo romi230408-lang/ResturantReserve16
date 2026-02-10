@@ -22,9 +22,19 @@ namespace ResturantReserve.ViewModels
         public bool IsHostTurn => game.IsHostTurn;
         public int PackageCardCount => game.PackageCardCount;
         public ObservableCollection<Card> MyCards { get; } = new();
-        public string OpenedCardImageSource => game.OpenedCardImageSource;
+        public string OpenedCardImageSource
+        {
+            get
+            {
+                var data = game.OpenedCardData;
+                if (data == null)
+                    return "startingcard.png";
 
+                return Card.GetImageSource(data.Type, data.Value);
+            }
+        }
 
+        public ObservableCollection<int> OpponentCards { get; } =  new() { 1, 2, 3, 4 };
 
         public GamePageVM(Game game)
         {
@@ -36,7 +46,10 @@ namespace ResturantReserve.ViewModels
             SelectCardCommand = new Command<Card>(SelectCard);
             ResetGameCommand = new Command(ResetGame);
             TakeCardCommand = new Command(TakeCard);
-            StartNewGame(false);
+            if (game.PackageCards.Count > 0)
+            {
+                StartNewGame(false);
+            }
 
             WeakReferenceMessenger.Default.Register<AppMessage<long>>(this, (r, m) =>
             {

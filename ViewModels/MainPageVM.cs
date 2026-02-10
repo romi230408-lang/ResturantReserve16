@@ -51,6 +51,7 @@ namespace ResturantReserve.ViewModels
         private void OnGameAdded(object? sender, Game game)
         {
             OnPropertyChanged(nameof(IsBusy));
+            game.AddSnapshotListener();
             MainThread.InvokeOnMainThreadAsync(() =>
             {
                 Shell.Current.Navigation.PushAsync(new GamePage(game), true);

@@ -42,7 +42,8 @@ namespace ResturantReserve.Models
 
 
         protected int pickedCardsCount;
-        public Card? openedCard;
+        public CardData? OpenedCardData { get; set; }
+
         public abstract void TakePackageCard();
 
         protected GameModel()
@@ -66,12 +67,24 @@ namespace ResturantReserve.Models
         public EventHandler<DisplayMoveArgs>? DisplayChanged;
         public List<int> Move { get; set; } = [Keys.NoMove, Keys.NoMove];
         public int PackageCardCount { get; set; } = 52;  
-        public List<Card> PackageCards { get; set; } = new();
+        public List<CardData> PackageCards { get; set; } = new();
 
         [Ignored]
-        public string OpenedCardImageSource
+        public string OpenedCardImageSource =>
+            OpenedCardData?.ImageSource ?? "startingcard.png";
+
+
+        [Ignored]
+        public bool IsMyTurn
         {
-            get => openedCard?.ImageSource ?? "startingcard.png";
+            get
+            {
+                // אם אני ה־Host, זה פשוט לפי IsHostTurn
+                // אחרת, ההיפך
+                return IsHostUser ? IsHostTurn : !IsHostTurn;
+            }
         }
+
+
     }
 }

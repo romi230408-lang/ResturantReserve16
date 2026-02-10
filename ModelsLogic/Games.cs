@@ -13,6 +13,7 @@ namespace ResturantReserve.ModelsLogic
             {
                 IsHostUser = true
             };
+            currentGame.Restart();
             currentGame.OnGameDeleted += OnGameDeleted;
             currentGame.SetDocument(OnComplete);
         }
